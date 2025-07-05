@@ -18,15 +18,48 @@ public class UnitCombatHandler : MonoBehaviour
     [Header("UI")]
     public TMP_Text healthText;
     public TMP_Text speedText;
-
     private BattleSystem battleSystem;
+
+    public bool isLookingTowardsRight = false;
+    public Vector3 originalPosition;
+    private UnitCombatHandler currentTarget;
+    private int finalDamage;
+    private bool hasAttacked = false;
+
+    private void Start()
+    {
+        // originalPosition = transform.position;
+        Debug.Log($"{gameObject.name} original position set to {originalPosition}");
+    }
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        battleSystem = FindFirstObjectByType<BattleSystem>();
+        animator = GetComponentInChildren<Animator>();
+        battleSystem = BattleSystem.Instance;
+        // originalPosition = transform.position;
+
+        if (battleSystem == null)
+            Debug.LogError("BattleSystem instance not found!");
+
         UpdateHealthText();
         UpdateSpeedText();
+
+        // Flip player to face towards (0, center of screen) based on isLookingTowardsRight
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        bool isTowardsRight = false;
+        if (spriteRenderer != null)
+        {
+            // If player is to the right of x=0, face left; else face right
+            if (transform.position.x > 0)
+            {
+                isTowardsRight = true;
+            }
+            else
+            {
+                isTowardsRight = false;
+            }
+            spriteRenderer.flipX = isLookingTowardsRight == isTowardsRight;
+        }
     }
 
     public void StartTurn()
@@ -34,23 +67,22 @@ public class UnitCombatHandler : MonoBehaviour
         StartAttack();
     }
 
+
     public void StartAttack()
     {
-        UnitCombatHandler target = battleSystem.PickTarget(this);
-
-        if (target == null)
+        currentTarget = battleSystem.PickTarget(this);
+        if (currentTarget == null)
         {
             Debug.Log("No valid target found!");
             return;
         }
 
-        animator.SetBool("isAttacking", true);
+        finalDamage = CalculateDamage();
+        hasAttacked = false;
 
-        // Calculate actual damage based on critical
-        int finalDamage = CalculateDamage();
+        Debug.Log("Original Position: " + originalPosition);
 
-        // Apply damage to target
-        target.TakeDamage(finalDamage, this);
+        StartCoroutine(MoveToTarget(currentTarget));
     }
 
     private int CalculateDamage()
@@ -78,6 +110,7 @@ public class UnitCombatHandler : MonoBehaviour
         }
 
         HP -= incomingDamage;
+        if (HP < 0) HP = 0;
         UpdateHealthText();
 
         if (HP > 0)
@@ -100,7 +133,7 @@ public class UnitCombatHandler : MonoBehaviour
     {
         animator.SetBool("isAttacking", false);
         Debug.Log("EndAttack: Reset isAttacking.");
-        StartCoroutine(PauseBeforeNextTurn());
+        StartCoroutine(ReturnToStart());
     }
 
     IEnumerator PauseBeforeNextTurn()
@@ -120,4 +153,43 @@ public class UnitCombatHandler : MonoBehaviour
         if (speedText != null)
             speedText.text = $"Speed: {Speed}";
     }
+
+    public float attackDistance = 0.8f;
+    IEnumerator MoveToTarget(UnitCombatHandler target)
+    {
+        Debug.Log("Original Position: " + originalPosition);
+        animator.SetFloat("xVelocity", 1);
+        Vector3 targetPos = target.transform.position + Vector3.left * 1f * Mathf.Sign(transform.position.x); // adjust offset if needed
+
+        while (Vector3.Distance(transform.position, targetPos) > attackDistance)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 10f);
+            yield return null; // Wait for the next frame
+        }
+
+        if (!hasAttacked)
+        {
+            currentTarget.TakeDamage(finalDamage, this);
+            hasAttacked = true;
+            animator.SetBool("isAttacking", true);
+        }
+
+    }
+
+    IEnumerator ReturnToStart()
+    {
+        Debug.Log($"[{name}] Starting ReturnToStart. Current: {transform.position}, Target: {originalPosition}");
+        animator.SetFloat("xVelocity", 0);
+
+        while (Vector3.Distance(transform.position, originalPosition) > 0f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, originalPosition, Time.deltaTime * 10f);
+            Debug.Log($"Moving... {transform.position} -> {originalPosition}");
+            yield return null; // Wait for the next frame
+        }
+
+        Debug.Log($"{gameObject.name} reached original position.");
+        battleSystem.NextTurn();
+    }
+
 }

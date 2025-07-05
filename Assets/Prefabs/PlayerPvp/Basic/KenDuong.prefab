@@ -408,6 +408,7 @@ MonoBehaviour:
   animator: {fileID: 421411530726951080}
   healthText: {fileID: 1261805138760670162}
   speedText: {fileID: 5086295901838768304}
+  isLookingTowardsRight: 1
 --- !u!1 &6313773801000594178
 GameObject:
   m_ObjectHideFlags: 0

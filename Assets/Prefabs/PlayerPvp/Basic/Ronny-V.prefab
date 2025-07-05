@@ -511,3 +511,4 @@ MonoBehaviour:
   animator: {fileID: 3561991198073423427}
   healthText: {fileID: 3898999123656615617}
   speedText: {fileID: 8043431249232661005}
+  isLookingTowardsRight: 1
