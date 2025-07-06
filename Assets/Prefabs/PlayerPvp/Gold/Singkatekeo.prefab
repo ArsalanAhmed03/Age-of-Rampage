@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 7170089319004555389}
   - component: {fileID: 1783360639927955743}
   - component: {fileID: 4650154306494318584}
+  - component: {fileID: -7092452755511982430}
   m_Layer: 0
   m_Name: Singkatekeo
   m_TagString: Untagged
@@ -511,3 +512,33 @@ MonoBehaviour:
   animator: {fileID: 1783360639927955743}
   healthText: {fileID: 4289992378046644906}
   speedText: {fileID: 8341287467202936189}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-7092452755511982430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4428078057234693495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 5
+    AttackPerLevel: 2
+    SpeedPerLevel: 2
+    CritChancePerLevel: 0
+    CritDamagePerLevel: 0.05
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20

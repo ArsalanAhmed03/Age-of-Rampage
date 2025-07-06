@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 2633917993676949586}
   - component: {fileID: 8467551975935482710}
   - component: {fileID: 8285590169643638537}
+  - component: {fileID: -8836122248447800037}
   m_Layer: 0
   m_Name: Mattgibson
   m_TagString: Untagged
@@ -511,3 +512,33 @@ MonoBehaviour:
   animator: {fileID: 8467551975935482710}
   healthText: {fileID: 6878332177169683251}
   speedText: {fileID: 4666653590931024177}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-8836122248447800037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7047616142226938014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 2
+    AttackPerLevel: 3
+    SpeedPerLevel: 3
+    CritChancePerLevel: 1
+    CritDamagePerLevel: 0
+    DodgeChancePerLevel: 1
+  currentLevel: 1
+  maxLevel: 20

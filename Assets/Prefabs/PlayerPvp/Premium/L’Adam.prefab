@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 6902421689585277361}
   - component: {fileID: 9086783770186347451}
   - component: {fileID: -4016236468407806945}
+  - component: {fileID: -7488963278161340722}
   m_Layer: 0
   m_Name: "L\u2019Adam"
   m_TagString: Untagged
@@ -375,6 +376,36 @@ MonoBehaviour:
   animator: {fileID: 9086783770186347451}
   healthText: {fileID: 221386437077704659}
   speedText: {fileID: 7711869052928883428}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-7488963278161340722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4961171771237328300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 5
+    AttackPerLevel: 2
+    SpeedPerLevel: 2
+    CritChancePerLevel: 3
+    CritDamagePerLevel: 0
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &7607583879221223057
 GameObject:
   m_ObjectHideFlags: 0

@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 8071569976042109098}
   - component: {fileID: 2716319531321874594}
   - component: {fileID: 3988055551361409741}
+  - component: {fileID: -1678763215962778699}
   m_Layer: 0
   m_Name: "K\u2019Costa"
   m_TagString: Untagged
@@ -272,6 +273,36 @@ MonoBehaviour:
   animator: {fileID: 2716319531321874594}
   healthText: {fileID: 2370053072495723156}
   speedText: {fileID: 4374095974262080739}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-1678763215962778699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003499947916455126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 3
+    AttackPerLevel: 4
+    SpeedPerLevel: 2
+    CritChancePerLevel: 3
+    CritDamagePerLevel: 0
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &4788826208157582604
 GameObject:
   m_ObjectHideFlags: 0

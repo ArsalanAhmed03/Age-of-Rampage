@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 5893591289659757354}
   - component: {fileID: 7848817156434323153}
   - component: {fileID: 8428491111937065332}
+  - component: {fileID: -2608407001337060985}
   m_Layer: 0
   m_Name: Franbuenelos
   m_TagString: Untagged
@@ -375,6 +376,36 @@ MonoBehaviour:
   animator: {fileID: 7848817156434323153}
   healthText: {fileID: 6679494376760048577}
   speedText: {fileID: 1918852879374050889}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-2608407001337060985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3227494426828859988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 2
+    AttackPerLevel: 4
+    SpeedPerLevel: 2
+    CritChancePerLevel: 0
+    CritDamagePerLevel: 0.1
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &8380367316141536714
 GameObject:
   m_ObjectHideFlags: 0

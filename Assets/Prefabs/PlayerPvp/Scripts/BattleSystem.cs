@@ -1,168 +1,10 @@
-// using System.Collections.Generic;
-// using UnityEngine;
-
-// public class BattleSystem : MonoBehaviour
-// {
-//     [Header("Spawn Parents")]
-//     public Transform playerFrontSpawnParent;
-//     public Transform playerBackSpawnParent;
-//     public Transform enemyFrontSpawnParent;
-//     public Transform enemyBackSpawnParent;
-
-//     private Transform[] playerFrontSpawns;
-//     private Transform[] playerBackSpawns;
-//     private Transform[] enemyFrontSpawns;
-//     private Transform[] enemyBackSpawns;
-
-//     public List<UnitCombatHandler> playerFrontline = new List<UnitCombatHandler>();
-//     public List<UnitCombatHandler> playerBackline = new List<UnitCombatHandler>();
-//     public List<UnitCombatHandler> enemyFrontline = new List<UnitCombatHandler>();
-//     public List<UnitCombatHandler> enemyBackline = new List<UnitCombatHandler>();
-
-//     public List<GameObject> enemyFrontPrefabs;
-//     public List<GameObject> enemyBackPrefabs;
-
-//     private int currentTurnIndex = 0;
-//     private List<UnitCombatHandler> turnQueue = new List<UnitCombatHandler>();
-
-//     public void InitializeBattle()
-//     {
-//         // Get spawn points from parents
-//         playerFrontSpawns = GetChildren(playerFrontSpawnParent);
-//         playerBackSpawns = GetChildren(playerBackSpawnParent);
-//         enemyFrontSpawns = GetChildren(enemyFrontSpawnParent);
-//         enemyBackSpawns = GetChildren(enemyBackSpawnParent);
-
-//         // Spawn Player Frontline
-//         for (int i = 0; i < LoadoutData.selectedFrontline.Count; i++)
-//         {
-//             GameObject go = Instantiate(LoadoutData.selectedFrontline[i], playerFrontSpawns[i].position, Quaternion.identity);
-//             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
-//             handler.IsFrontline = true;
-//             playerFrontline.Add(handler);
-//         }
-
-//         // Spawn Player Backline
-//         for (int i = 0; i < LoadoutData.selectedBackline.Count; i++)
-//         {
-//             GameObject go = Instantiate(LoadoutData.selectedBackline[i], playerBackSpawns[i].position, Quaternion.identity);
-//             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
-//             handler.IsFrontline = false;
-//             playerBackline.Add(handler);
-//         }
-
-//         // Spawn Enemy Frontline
-//         for (int i = 0; i < enemyFrontPrefabs.Count; i++)
-//         {
-//             GameObject go = Instantiate(enemyFrontPrefabs[i], enemyFrontSpawns[i].position, Quaternion.identity);
-//             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
-//             handler.IsFrontline = true;
-//             enemyFrontline.Add(handler);
-//         }
-
-//         // Spawn Enemy Backline
-//         for (int i = 0; i < enemyBackPrefabs.Count; i++)
-//         {
-//             GameObject go = Instantiate(enemyBackPrefabs[i], enemyBackSpawns[i].position, Quaternion.identity);
-//             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
-//             handler.IsFrontline = false;
-//             enemyBackline.Add(handler);
-//         }
-
-//         StartBattle();
-//     }
-
-//     private Transform[] GetChildren(Transform parent)
-//     {
-//         Transform[] children = new Transform[parent.childCount];
-//         for (int i = 0; i < parent.childCount; i++)
-//         {
-//             children[i] = parent.GetChild(i);
-//         }
-//         return children;
-//     }
-
-//     public void StartBattle()
-//     {
-//         turnQueue.Clear();
-//         turnQueue.AddRange(playerFrontline);
-//         turnQueue.AddRange(playerBackline);
-//         turnQueue.AddRange(enemyFrontline);
-//         turnQueue.AddRange(enemyBackline);
-
-//         turnQueue.Sort((a, b) => b.Speed.CompareTo(a.Speed));
-//         currentTurnIndex = 0;
-//         NextTurn();
-//     }
-
-//     public void NextTurn()
-//     {
-//         if (turnQueue.Count == 0) return;
-
-//         UnitCombatHandler unit = turnQueue[currentTurnIndex];
-//         currentTurnIndex = (currentTurnIndex + 1) % turnQueue.Count;
-
-//         unit.StartTurn();
-//     }
-
-//     public UnitCombatHandler PickTarget(UnitCombatHandler attacker)
-//     {
-//         List<UnitCombatHandler> enemiesFront;
-//         List<UnitCombatHandler> enemiesBack;
-
-//         if (playerFrontline.Contains(attacker) || playerBackline.Contains(attacker))
-//         {
-//             enemiesFront = enemyFrontline;
-//             enemiesBack = enemyBackline;
-//         }
-//         else
-//         {
-//             enemiesFront = playerFrontline;
-//             enemiesBack = playerBackline;
-//         }
-
-//         List<UnitCombatHandler> validFront = enemiesFront.FindAll(u => u.HP > 0);
-//         List<UnitCombatHandler> validBack = enemiesBack.FindAll(u => u.HP > 0);
-
-//         if (validFront.Count > 0)
-//             return validFront[Random.Range(0, validFront.Count)];
-//         if (validBack.Count > 0)
-//             return validBack[Random.Range(0, validBack.Count)];
-
-//         return null;
-//     }
-
-//     public void RemoveUnit(UnitCombatHandler unit)
-//     {
-//         turnQueue.Remove(unit);
-//         playerFrontline.Remove(unit);
-//         playerBackline.Remove(unit);
-//         enemyFrontline.Remove(unit);
-//         enemyBackline.Remove(unit);
-
-//         // Check for victory condition
-//         if (playerFrontline.Count + playerBackline.Count == 0)
-//         {
-//             Debug.Log("Enemy team wins!");
-//             return;
-//         }
-//         if (enemyFrontline.Count + enemyBackline.Count == 0)
-//         {
-//             Debug.Log("Player team wins!");
-//             return;
-//         }
-
-//         if (currentTurnIndex >= turnQueue.Count)
-//             currentTurnIndex = 0;
-//     }
-// }
-
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleSystem : MonoBehaviour
 {
     public static BattleSystem Instance;
+
     [Header("Spawn Parents")]
     public Transform playerFrontSpawnParent;
     public Transform playerBackSpawnParent;
@@ -189,15 +31,15 @@ public class BattleSystem : MonoBehaviour
     {
         Instance = this;
     }
+
     public void InitializeBattle()
     {
-        // Get spawn points from parents
         playerFrontSpawns = GetChildren(playerFrontSpawnParent);
         playerBackSpawns = GetChildren(playerBackSpawnParent);
         enemyFrontSpawns = GetChildren(enemyFrontSpawnParent);
         enemyBackSpawns = GetChildren(enemyBackSpawnParent);
 
-        // Spawn Player Frontline (slots 0-2)
+        // Spawn Player Frontline
         for (int i = 0; i < 3; i++)
         {
             GameObject unitPrefab = LoadoutData.selectedUnits[i];
@@ -209,7 +51,7 @@ public class BattleSystem : MonoBehaviour
             playerFrontline.Add(handler);
         }
 
-        // Spawn Player Backline (slots 3-5)
+        // Spawn Player Backline
         for (int i = 3; i < 6; i++)
         {
             GameObject unitPrefab = LoadoutData.selectedUnits[i];
@@ -260,7 +102,9 @@ public class BattleSystem : MonoBehaviour
         turnQueue.AddRange(enemyFrontline);
         turnQueue.AddRange(enemyBackline);
 
-        turnQueue.Sort((a, b) => b.Speed.CompareTo(a.Speed));
+        // Sort based on speed (from UnitStats)
+        turnQueue.Sort((a, b) => b.unitStats.GetStats().Speed.CompareTo(a.unitStats.GetStats().Speed));
+
         currentTurnIndex = 0;
         NextTurn();
     }
@@ -291,8 +135,8 @@ public class BattleSystem : MonoBehaviour
             enemiesBack = playerBackline;
         }
 
-        List<UnitCombatHandler> validFront = enemiesFront.FindAll(u => u.HP > 0);
-        List<UnitCombatHandler> validBack = enemiesBack.FindAll(u => u.HP > 0);
+        List<UnitCombatHandler> validFront = enemiesFront.FindAll(u => u.unitStats.GetStats().HP > 0);
+        List<UnitCombatHandler> validBack = enemiesBack.FindAll(u => u.unitStats.GetStats().HP > 0);
 
         if (validFront.Count > 0)
             return validFront[Random.Range(0, validFront.Count)];
@@ -310,7 +154,6 @@ public class BattleSystem : MonoBehaviour
         enemyFrontline.Remove(unit);
         enemyBackline.Remove(unit);
 
-        // Check for victory condition
         if (playerFrontline.Count + playerBackline.Count == 0)
         {
             Debug.Log("Enemy team wins!");
@@ -326,4 +169,5 @@ public class BattleSystem : MonoBehaviour
             currentTurnIndex = 0;
     }
 }
+
 

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1492826267545331380}
   - component: {fileID: 2384002073090484661}
   - component: {fileID: 1038435818332674144}
+  - component: {fileID: -8089031588669868446}
   m_Layer: 0
   m_Name: Carlitos
   m_TagString: Untagged
@@ -134,6 +135,36 @@ MonoBehaviour:
   animator: {fileID: 2384002073090484661}
   healthText: {fileID: 6151070994296897346}
   speedText: {fileID: 3348258260147836056}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-8089031588669868446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3587735515946491809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 1
+    AttackPerLevel: 5
+    SpeedPerLevel: 2
+    CritChancePerLevel: 0
+    CritDamagePerLevel: 0.2
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &6474131336640143338
 GameObject:
   m_ObjectHideFlags: 0

@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 482725716263615397}
   - component: {fileID: 3561991198073423427}
   - component: {fileID: 5187154853595183378}
+  - component: {fileID: -6464843363775348626}
   m_Layer: 0
   m_Name: Ronny-V
   m_TagString: Untagged
@@ -512,3 +513,32 @@ MonoBehaviour:
   healthText: {fileID: 3898999123656615617}
   speedText: {fileID: 8043431249232661005}
   isLookingTowardsRight: 1
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-6464843363775348626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6420260346434141204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 2
+    AttackPerLevel: 3
+    SpeedPerLevel: 2
+    CritChancePerLevel: 0
+    CritDamagePerLevel: 0.1
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20

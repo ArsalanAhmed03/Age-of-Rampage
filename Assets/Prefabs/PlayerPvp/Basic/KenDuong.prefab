@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 3413133546677916453}
   - component: {fileID: 421411530726951080}
   - component: {fileID: 3544753528376835701}
+  - component: {fileID: 5648177887570293299}
   m_Layer: 0
   m_Name: KenDuong
   m_TagString: Untagged
@@ -398,17 +399,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6501f65dfadb29d4fbbc4d9e33142059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 80
-  AttackDamage: 20
-  Speed: 15
-  CriticalChance: 10
-  CriticalDamageMultiplier: 1.5
-  DodgeChance: 5
   IsFrontline: 1
   animator: {fileID: 421411530726951080}
   healthText: {fileID: 1261805138760670162}
   speedText: {fileID: 5086295901838768304}
+  unitStats: {fileID: 0}
   isLookingTowardsRight: 1
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &5648177887570293299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6248882066964672192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 3
+    AttackPerLevel: 3
+    SpeedPerLevel: 1
+    CritChancePerLevel: 1
+    CritDamagePerLevel: 0.05
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &6313773801000594178
 GameObject:
   m_ObjectHideFlags: 0

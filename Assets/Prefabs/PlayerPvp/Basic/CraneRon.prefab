@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 2754737070481572366}
   - component: {fileID: 8289907782430970804}
   - component: {fileID: 2348565094728439404}
+  - component: {fileID: -4987408878938292996}
   m_Layer: 0
   m_Name: CraneRon
   m_TagString: Untagged
@@ -227,17 +228,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6501f65dfadb29d4fbbc4d9e33142059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 80
-  AttackDamage: 20
-  Speed: 15
-  CriticalChance: 10
-  CriticalDamageMultiplier: 1.5
-  DodgeChance: 5
   IsFrontline: 1
   animator: {fileID: 8289907782430970804}
   healthText: {fileID: 2170088036105066176}
   speedText: {fileID: 7371854606070839832}
+  unitStats: {fileID: 0}
   isLookingTowardsRight: 1
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-4987408878938292996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944488905935073372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 2
+    AttackPerLevel: 2
+    SpeedPerLevel: 3
+    CritChancePerLevel: 10
+    CritDamagePerLevel: 0.05
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &3424605970547649332
 GameObject:
   m_ObjectHideFlags: 0

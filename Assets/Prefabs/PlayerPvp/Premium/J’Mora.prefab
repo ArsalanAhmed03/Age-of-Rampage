@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2525729842451176900}
   - component: {fileID: 3021640474344639013}
   - component: {fileID: 8975932058910715999}
+  - component: {fileID: -339114957273205551}
   m_Layer: 0
   m_Name: "J\u2019Mora"
   m_TagString: Untagged
@@ -134,6 +135,36 @@ MonoBehaviour:
   animator: {fileID: 3021640474344639013}
   healthText: {fileID: 715775760552732433}
   speedText: {fileID: 984690390517865516}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-339114957273205551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415525697112007446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 6
+    AttackPerLevel: 2
+    SpeedPerLevel: 1
+    CritChancePerLevel: 3
+    CritDamagePerLevel: 0
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &2169431702280638091
 GameObject:
   m_ObjectHideFlags: 0

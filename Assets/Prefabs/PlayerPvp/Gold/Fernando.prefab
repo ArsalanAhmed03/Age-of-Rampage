@@ -389,6 +389,7 @@ GameObject:
   - component: {fileID: 8554669459022116652}
   - component: {fileID: 5524216244127437372}
   - component: {fileID: 8750578943215802682}
+  - component: {fileID: -4370335127009979835}
   m_Layer: 0
   m_Name: Fernando
   m_TagString: Untagged
@@ -511,3 +512,33 @@ MonoBehaviour:
   animator: {fileID: 5524216244127437372}
   healthText: {fileID: 8259812265137547762}
   speedText: {fileID: 455974524559222008}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &-4370335127009979835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7607182741986347932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 7
+    AttackPerLevel: 1
+    SpeedPerLevel: 1
+    CritChancePerLevel: 0
+    CritDamagePerLevel: 0.05
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20

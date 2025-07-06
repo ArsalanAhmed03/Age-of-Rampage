@@ -19,6 +19,9 @@ public class SelectionScreenManager : MonoBehaviour
     public TMP_Text frontlineCountText;
     public TMP_Text backlineCountText;
 
+    [Header("Upgrade Screen")]
+    public UpgradeScreenUI UpgradeScreenUI;
+
 
     private void Start()
     {
@@ -54,6 +57,13 @@ public class SelectionScreenManager : MonoBehaviour
             if (drag != null)
             {
                 drag.SetPrefab(unit);
+            }
+
+            UnitClickHandler clickHandler = btn.GetComponent<UnitClickHandler>();
+            if (clickHandler != null)
+            {
+                clickHandler.unitStats = unit.GetComponent<UnitStats>();
+                clickHandler.UpgradeScreenUI = UpgradeScreenUI;
             }
         }
     }

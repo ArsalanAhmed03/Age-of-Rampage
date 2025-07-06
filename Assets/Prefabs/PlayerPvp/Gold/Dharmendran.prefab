@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3625337610000852522}
   - component: {fileID: 2982802303449670463}
   - component: {fileID: 8654970627429425010}
+  - component: {fileID: 9172175186791717177}
   m_Layer: 0
   m_Name: Dharmendran
   m_TagString: Untagged
@@ -134,6 +135,36 @@ MonoBehaviour:
   animator: {fileID: 2982802303449670463}
   healthText: {fileID: 4011081305781054740}
   speedText: {fileID: 352838863637791325}
+  isLookingTowardsRight: 0
+  originalPosition: {x: 0, y: 0, z: 0}
+  attackDistance: 0.8
+--- !u!114 &9172175186791717177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784332985707839658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa14731d564bd04e88499ecfc8cad3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseHP: 5
+  baseAttack: 2
+  baseSpeed: 1
+  baseCritChance: 10
+  critMultiplier: 1.5
+  baseDodgeChance: 0
+  growth:
+    HPPerLevel: 3
+    AttackPerLevel: 2
+    SpeedPerLevel: 4
+    CritChancePerLevel: 1
+    CritDamagePerLevel: 0
+    DodgeChancePerLevel: 0
+  currentLevel: 1
+  maxLevel: 20
 --- !u!1 &4992686509123592395
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,62 +4,51 @@ using TMPro;
 
 public class UnitCombatHandler : MonoBehaviour
 {
-    [Header("Stats")]
-    public int HP = 100;
-    public int AttackDamage = 20;
-    public int Speed = 10;
-    [Range(0, 100)] public float CriticalChance = 10f;  // % chance for critical hit
-    public float CriticalDamageMultiplier = 1.5f;       // 1.5x by default
-    [Range(0, 100)] public float DodgeChance = 5f;       // % chance to dodge
-
     public bool IsFrontline = true;
     public Animator animator;
 
     [Header("UI")]
     public TMP_Text healthText;
     public TMP_Text speedText;
-    private BattleSystem battleSystem;
 
-    public bool isLookingTowardsRight = false;
-    public Vector3 originalPosition;
+    private BattleSystem battleSystem;
     private UnitCombatHandler currentTarget;
+    public UnitStats unitStats;
     private int finalDamage;
     private bool hasAttacked = false;
 
-    private void Start()
-    {
-        // originalPosition = transform.position;
-        Debug.Log($"{gameObject.name} original position set to {originalPosition}");
-    }
+    public bool isLookingTowardsRight = false;
+    public Vector3 originalPosition;
+    public float attackDistance = 0.8f;
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         battleSystem = BattleSystem.Instance;
-        // originalPosition = transform.position;
+        unitStats = GetComponent<UnitStats>();
+
+        if (unitStats == null)
+            Debug.LogError($"UnitStats missing on {name}");
 
         if (battleSystem == null)
             Debug.LogError("BattleSystem instance not found!");
 
-        UpdateHealthText();
-        UpdateSpeedText();
-
-        // Flip player to face towards (0, center of screen) based on isLookingTowardsRight
+        // Flip sprite based on position
         SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        bool isTowardsRight = false;
         if (spriteRenderer != null)
         {
-            // If player is to the right of x=0, face left; else face right
-            if (transform.position.x > 0)
-            {
-                isTowardsRight = true;
-            }
-            else
-            {
-                isTowardsRight = false;
-            }
+            bool isTowardsRight = transform.position.x > 0;
             spriteRenderer.flipX = isLookingTowardsRight == isTowardsRight;
         }
+
+        UpdateHealthText();
+        UpdateSpeedText();
+    }
+
+    private void Start()
+    {
+        UpdateHealthText();
+        UpdateSpeedText();
     }
 
     public void StartTurn()
@@ -67,9 +56,10 @@ public class UnitCombatHandler : MonoBehaviour
         StartAttack();
     }
 
-
     public void StartAttack()
     {
+        Debug.Log($"{gameObject.name} is starting an attack!");
+
         currentTarget = battleSystem.PickTarget(this);
         if (currentTarget == null)
         {
@@ -80,19 +70,20 @@ public class UnitCombatHandler : MonoBehaviour
         finalDamage = CalculateDamage();
         hasAttacked = false;
 
-        Debug.Log("Original Position: " + originalPosition);
-
         StartCoroutine(MoveToTarget(currentTarget));
     }
 
     private int CalculateDamage()
     {
+        UnitStatsData stats = unitStats.GetStats();
         float critRoll = Random.Range(0f, 100f);
-        bool isCrit = critRoll <= CriticalChance;
+        bool isCrit = critRoll <= stats.CritChance;
 
         int damage = isCrit
-            ? Mathf.RoundToInt(AttackDamage * CriticalDamageMultiplier)
-            : AttackDamage;
+            ? Mathf.RoundToInt(stats.Attack * stats.CritMultiplier)
+            : stats.Attack;
+
+        Debug.Log($"Attack Damage: {stats.Attack}, Critical Hit: {isCrit}, Damage: {damage}");
 
         if (isCrit)
             Debug.Log($"{gameObject.name} landed a CRITICAL HIT! Damage: {damage}");
@@ -103,24 +94,23 @@ public class UnitCombatHandler : MonoBehaviour
     public void TakeDamage(int incomingDamage, UnitCombatHandler attacker)
     {
         float dodgeRoll = Random.Range(0f, 100f);
-        if (dodgeRoll <= DodgeChance)
+        float dodgeChance = unitStats.GetStats().DodgeChance;
+
+        if (dodgeRoll <= dodgeChance)
         {
             Debug.Log($"{gameObject.name} DODGED the attack from {attacker.gameObject.name}!");
             return;
         }
 
-        HP -= incomingDamage;
-        if (HP < 0) HP = 0;
+        unitStats.baseHP -= incomingDamage;
+        if (unitStats.baseHP < 0) unitStats.baseHP = 0;
+
         UpdateHealthText();
 
-        if (HP > 0)
-        {
-            Debug.Log($"{gameObject.name} took {incomingDamage} damage from {attacker.gameObject.name}. Remaining HP: {HP}");
-        }
-        else
-        {
+        Debug.Log($"{gameObject.name} took {incomingDamage} damage from {attacker.gameObject.name}. Remaining HP: {unitStats.baseHP}");
+
+        if (unitStats.baseHP <= 0)
             Die();
-        }
     }
 
     void Die()
@@ -132,7 +122,6 @@ public class UnitCombatHandler : MonoBehaviour
     public void EndAttack()
     {
         animator.SetBool("isAttacking", false);
-        Debug.Log("EndAttack: Reset isAttacking.");
         StartCoroutine(ReturnToStart());
     }
 
@@ -142,29 +131,27 @@ public class UnitCombatHandler : MonoBehaviour
         battleSystem.NextTurn();
     }
 
-    private void UpdateHealthText()
+    public void UpdateHealthText()
     {
         if (healthText != null)
-            healthText.text = $"HP: {HP}";
+            healthText.text = $"HP: {unitStats.GetStats().HP}";
     }
 
-    private void UpdateSpeedText()
+    public void UpdateSpeedText()
     {
         if (speedText != null)
-            speedText.text = $"Speed: {Speed}";
+            speedText.text = $"Speed: {unitStats.GetStats().Speed}";
     }
 
-    public float attackDistance = 0.8f;
     IEnumerator MoveToTarget(UnitCombatHandler target)
     {
-        Debug.Log("Original Position: " + originalPosition);
         animator.SetFloat("xVelocity", 1);
-        Vector3 targetPos = target.transform.position + Vector3.left * 1f * Mathf.Sign(transform.position.x); // adjust offset if needed
+        Vector3 targetPos = target.transform.position + Vector3.left * 1f * Mathf.Sign(transform.position.x);
 
         while (Vector3.Distance(transform.position, targetPos) > attackDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime * 10f);
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
         if (!hasAttacked)
@@ -173,23 +160,18 @@ public class UnitCombatHandler : MonoBehaviour
             hasAttacked = true;
             animator.SetBool("isAttacking", true);
         }
-
     }
 
     IEnumerator ReturnToStart()
     {
-        Debug.Log($"[{name}] Starting ReturnToStart. Current: {transform.position}, Target: {originalPosition}");
         animator.SetFloat("xVelocity", 0);
 
         while (Vector3.Distance(transform.position, originalPosition) > 0f)
         {
             transform.position = Vector3.MoveTowards(transform.position, originalPosition, Time.deltaTime * 10f);
-            Debug.Log($"Moving... {transform.position} -> {originalPosition}");
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        Debug.Log($"{gameObject.name} reached original position.");
         battleSystem.NextTurn();
     }
-
 }
