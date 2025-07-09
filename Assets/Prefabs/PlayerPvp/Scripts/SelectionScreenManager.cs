@@ -63,6 +63,7 @@ public class SelectionScreenManager : MonoBehaviour
             if (clickHandler != null)
             {
                 clickHandler.unitStats = unit.GetComponent<UnitStats>();
+                clickHandler.unitSprite = unitSprite;
                 clickHandler.UpgradeScreenUI = UpgradeScreenUI;
             }
         }

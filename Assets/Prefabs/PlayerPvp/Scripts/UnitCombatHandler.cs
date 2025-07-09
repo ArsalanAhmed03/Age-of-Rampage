@@ -117,6 +117,7 @@ public class UnitCombatHandler : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} has died.");
         battleSystem.RemoveUnit(this);
+        Destroy(gameObject);
     }
 
     public void EndAttack()

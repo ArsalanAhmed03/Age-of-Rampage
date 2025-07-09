@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 public class UnitClickHandler : MonoBehaviour, IPointerClickHandler
 {
     public UnitStats unitStats;
+
+    public Sprite unitSprite;
     public UpgradeScreenUI UpgradeScreenUI;
 
     public void OnPointerClick(PointerEventData eventData)
@@ -22,7 +24,7 @@ public class UnitClickHandler : MonoBehaviour, IPointerClickHandler
 
         if (unitStats != null && UpgradeScreenUI != null)
         {
-            UpgradeScreenUI.Open(unitStats);
+            UpgradeScreenUI.Open(unitStats, unitSprite);
         }
     }
 }

@@ -1313,8 +1313,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -130, y: -82}
-  m_SizeDelta: {x: 657.9866, y: 50}
+  m_AnchoredPosition: {x: 88.56502, y: -82}
+  m_SizeDelta: {x: 1095.1166, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &178354616
 MonoBehaviour:
@@ -8602,6 +8602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameText: {fileID: 178354616}
   levelText: {fileID: 728303738}
+  unitImage: {fileID: 1141525}
   levelUpButton: {fileID: 982394678}
   closeButton: {fileID: 1800238652}
   hpRow: {fileID: 1368429759}

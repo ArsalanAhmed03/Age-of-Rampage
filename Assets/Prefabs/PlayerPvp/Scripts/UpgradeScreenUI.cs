@@ -6,6 +6,7 @@ public class UpgradeScreenUI : MonoBehaviour
 {
     public TMP_Text nameText;
     public TMP_Text levelText;
+    public Image unitImage;
     public Button levelUpButton;
     public Button closeButton;
 
@@ -18,10 +19,11 @@ public class UpgradeScreenUI : MonoBehaviour
 
     private UnitStats currentUnit;
 
-    public void Open(UnitStats unitStats)
+    public void Open(UnitStats unitStats, Sprite unitSprite)
     {
         Debug.Log($"Opening Upgrade Screen for {unitStats.name}");
         currentUnit = unitStats;
+        unitImage.sprite = unitSprite;
         gameObject.SetActive(true);
         RefreshUI();
     }
@@ -43,7 +45,7 @@ public class UpgradeScreenUI : MonoBehaviour
             CritMultiplier = currentUnit.critMultiplier + growth.CritDamagePerLevel * levelOffset,
             DodgeChance = currentUnit.baseDodgeChance + growth.DodgeChancePerLevel * levelOffset
         };
-
+        
         nameText.text = currentUnit.name;
         levelText.text = $"Level: {currentUnit.currentLevel}/{currentUnit.maxLevel}";
 
