@@ -2,6 +2,19 @@ using UnityEngine;
 
 public class UIScreenSlider : MonoBehaviour
 {
+    public static UIScreenSlider Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     [Header("References")]
     public RectTransform screenContainer;
     private RectTransform[] screens;
@@ -11,6 +24,7 @@ public class UIScreenSlider : MonoBehaviour
 
     private Vector2 targetPos;
     private float screenWidth;
+
 
     void Start()
     {
@@ -23,15 +37,18 @@ public class UIScreenSlider : MonoBehaviour
             screens[i] = screenContainer.GetChild(i) as RectTransform;
         }
 
-        for (int i = 0; i < screens.Length - 1; i++)
+        for (int i = 0; i < screens.Length - 2; i++)
         {
             RectTransform screen = screens[i];
             screen.anchoredPosition = new Vector2(i * screenWidth, 0);
             screen.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, screenWidth);
         }
 
-        RectTransform screentemp = screenContainer.GetChild(screenContainer.childCount - 1) as RectTransform;
-        screentemp.anchoredPosition = new Vector2(1 * screenWidth, 0);
+        RectTransform buyScreentemp = screenContainer.GetChild(screenContainer.childCount - 2) as RectTransform;
+        buyScreentemp.anchoredPosition = new Vector2(0 * screenWidth, 0);
+
+        RectTransform selectionScreentemp = screenContainer.GetChild(screenContainer.childCount - 1) as RectTransform;
+        selectionScreentemp.anchoredPosition = new Vector2(1 * screenWidth, 0);
 
         targetPos = screenContainer.anchoredPosition;
     }

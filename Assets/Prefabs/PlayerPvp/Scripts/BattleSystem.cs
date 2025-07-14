@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 public class BattleSystem : MonoBehaviour
@@ -10,6 +11,15 @@ public class BattleSystem : MonoBehaviour
     public Transform playerBackSpawnParent;
     public Transform enemyFrontSpawnParent;
     public Transform enemyBackSpawnParent;
+
+    [Header("UI References")]
+    public UnityEngine.UI.Image playerHealth;
+    public UnityEngine.UI.Image enemyHealth;
+
+    [Header("Battle Controls")]
+    public UnityEngine.UI.Button pauseButton;
+    public UnityEngine.UI.Button fastForwardButton;
+
 
     private Transform[] playerFrontSpawns;
     private Transform[] playerBackSpawns;
@@ -24,16 +34,30 @@ public class BattleSystem : MonoBehaviour
     public List<GameObject> enemyFrontPrefabs;
     public List<GameObject> enemyBackPrefabs;
 
+    [Header("End Screens")]
+    public GameObject wonScreen;
+    public GameObject lostScreen;
+
+    public float playerHealthTotal = 0f;
+    public float enemyHealthTotal = 0f;
+
+    public float playerHealthCurrent = 0f;
+    public float enemyHealthCurrent = 0f;
+
+    public bool fightEnded = false;
     private int currentTurnIndex = 0;
     private List<UnitCombatHandler> turnQueue = new List<UnitCombatHandler>();
 
     private void Awake()
     {
         Instance = this;
+        pauseButton.onClick.AddListener(TooglePause);
+        fastForwardButton.onClick.AddListener(ToogleSpeedUp);
     }
 
     public void InitializeBattle()
     {
+        fightEnded = false;
         playerFrontSpawns = GetChildren(playerFrontSpawnParent);
         playerBackSpawns = GetChildren(playerBackSpawnParent);
         enemyFrontSpawns = GetChildren(enemyFrontSpawnParent);
@@ -47,6 +71,7 @@ public class BattleSystem : MonoBehaviour
 
             GameObject go = Instantiate(unitPrefab, playerFrontSpawns[i].position, Quaternion.identity);
             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
+            playerHealthTotal += handler.unitStats.GetStats().HP;
             handler.IsFrontline = true;
             playerFrontline.Add(handler);
         }
@@ -59,6 +84,7 @@ public class BattleSystem : MonoBehaviour
 
             GameObject go = Instantiate(unitPrefab, playerBackSpawns[i - 3].position, Quaternion.identity);
             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
+            playerHealthTotal += handler.unitStats.GetStats().HP;
             handler.IsFrontline = false;
             playerBackline.Add(handler);
         }
@@ -68,6 +94,7 @@ public class BattleSystem : MonoBehaviour
         {
             GameObject go = Instantiate(enemyFrontPrefabs[i], enemyFrontSpawns[i].position, Quaternion.identity);
             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
+            enemyHealthTotal += handler.unitStats.GetStats().HP;
             handler.IsFrontline = true;
             enemyFrontline.Add(handler);
         }
@@ -77,9 +104,13 @@ public class BattleSystem : MonoBehaviour
         {
             GameObject go = Instantiate(enemyBackPrefabs[i], enemyBackSpawns[i].position, Quaternion.identity);
             UnitCombatHandler handler = go.GetComponent<UnitCombatHandler>();
+            enemyHealthTotal += handler.unitStats.GetStats().HP;
             handler.IsFrontline = false;
             enemyBackline.Add(handler);
         }
+
+        playerHealthCurrent = playerHealthTotal;
+        enemyHealthCurrent = enemyHealthTotal;
 
         StartBattle();
     }
@@ -103,6 +134,15 @@ public class BattleSystem : MonoBehaviour
         turnQueue.AddRange(enemyBackline);
 
         // Sort based on speed (from UnitStats)
+        // Shuffle the turnQueue first for randomness among same speed units
+        for (int i = turnQueue.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            var temp = turnQueue[i];
+            turnQueue[i] = turnQueue[j];
+            turnQueue[j] = temp;
+        }
+        // Then sort by speed (stable sort so shuffled order is preserved for equal speeds)
         turnQueue.Sort((a, b) => b.unitStats.GetStats().Speed.CompareTo(a.unitStats.GetStats().Speed));
 
         currentTurnIndex = 0;
@@ -126,11 +166,13 @@ public class BattleSystem : MonoBehaviour
 
         if (playerFrontline.Contains(attacker) || playerBackline.Contains(attacker))
         {
+            lastAttackerPlayer = true;
             enemiesFront = enemyFrontline;
             enemiesBack = enemyBackline;
         }
         else
         {
+            lastAttackerPlayer = false;
             enemiesFront = playerFrontline;
             enemiesBack = playerBackline;
         }
@@ -146,6 +188,34 @@ public class BattleSystem : MonoBehaviour
         return null;
     }
 
+    bool lastAttackerPlayer = true;
+
+    public void UpdateHealthBars(int damage)
+    {
+        if (lastAttackerPlayer)
+        {
+            enemyHealthCurrent -= damage;
+            if (enemyHealthCurrent <= 0)
+            {
+                enemyHealthCurrent = 0;
+            }
+
+            enemyHealth.fillAmount = enemyHealthCurrent / enemyHealthTotal;
+
+        }
+        else
+        {
+            playerHealthCurrent -= damage;
+            if (playerHealthCurrent <= 0)
+            {
+                playerHealthCurrent = 0;
+            }
+
+            playerHealth.fillAmount = playerHealthCurrent / playerHealthTotal;
+
+        }
+    }
+
     public void RemoveUnit(UnitCombatHandler unit)
     {
         turnQueue.Remove(unit);
@@ -157,17 +227,108 @@ public class BattleSystem : MonoBehaviour
         if (playerFrontline.Count + playerBackline.Count == 0)
         {
             Debug.Log("Enemy team wins!");
+            PlayerStatsManager.Instance.PlayerLevel--;
+            lostScreen.SetActive(true);
+            fightEnded = true;
             return;
         }
         if (enemyFrontline.Count + enemyBackline.Count == 0)
         {
             Debug.Log("Player team wins!");
+            PlayerStatsManager.Instance.PlayerLevel++;
+            wonScreen.SetActive(true);
+            fightEnded = true;
             return;
         }
 
         if (currentTurnIndex >= turnQueue.Count)
             currentTurnIndex = 0;
     }
+
+
+    bool isPaused = false;
+    bool isSpeedingUp = false;
+    public void TooglePause()
+    {
+        if (isPaused)
+        {
+            Time.timeScale = 1f;
+            isPaused = false;
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            isPaused = true;
+        }
+
+    }
+
+    public void ToogleSpeedUp()
+    {
+        if (isSpeedingUp)
+        {
+            Time.timeScale = 1f;
+            isSpeedingUp = false;
+        }
+        else
+        {
+            Time.timeScale = 1.5f;
+            isSpeedingUp = true;
+        }
+    }
+
+    public void ResetBattleScene()
+    {
+        fightEnded = false;
+        // Destroy all player units
+        foreach (var unit in playerFrontline)
+        {
+            if (unit != null)
+                Destroy(unit.gameObject);
+        }
+        foreach (var unit in playerBackline)
+        {
+            if (unit != null)
+                Destroy(unit.gameObject);
+        }
+
+        // Destroy all enemy units
+        foreach (var unit in enemyFrontline)
+        {
+            if (unit != null)
+                Destroy(unit.gameObject);
+        }
+        foreach (var unit in enemyBackline)
+        {
+            if (unit != null)
+                Destroy(unit.gameObject);
+        }
+
+        // Clear all lists
+        playerFrontline.Clear();
+        playerBackline.Clear();
+        enemyFrontline.Clear();
+        enemyBackline.Clear();
+        turnQueue.Clear();
+
+        // Reset health values
+        playerHealthTotal = 0f;
+        enemyHealthTotal = 0f;
+        playerHealthCurrent = 0f;
+        enemyHealthCurrent = 0f;
+        playerHealth.fillAmount = 1f;
+        enemyHealth.fillAmount = 1f;
+
+        // Disable end screens
+        if (wonScreen != null)
+            wonScreen.SetActive(false);
+        if (lostScreen != null)
+            lostScreen.SetActive(false);
+        
+        SelectionScreenManager.Instance.OnBattleEnded();
+    }
+
+
 }
 
 

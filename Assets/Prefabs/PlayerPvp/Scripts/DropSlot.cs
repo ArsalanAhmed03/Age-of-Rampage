@@ -1,37 +1,3 @@
-// using UnityEngine;
-// using UnityEngine.EventSystems;
-// using UnityEngine.UI;
-
-// public class DropSlot : MonoBehaviour, IDropHandler
-// {
-//     public int slotIndex; // 0-5 for LoadoutData.selectedUnits[]
-//     public Image iconImage;
-
-//     public Button removeButton;
-
-//     private GameObject assignedPrefab;
-
-//     public void OnDrop(PointerEventData eventData)
-//     {
-//         DraggableUnit dragged = eventData.pointerDrag?.GetComponent<DraggableUnit>();
-//         if (dragged == null) return;
-
-//         // Assign to LoadoutData
-//         LoadoutData.selectedUnits[slotIndex] = dragged.unitPrefab;
-
-//         // Assign sprite
-//         Sprite unitSprite = dragged.unitPrefab.GetComponent<SpriteRenderer>().sprite;
-//         if (iconImage != null && unitSprite != null)
-//         {
-//             iconImage.sprite = unitSprite;
-//             iconImage.color = Color.white;
-//         }
-
-//         dragged.DestroyDragPreview();
-//         Destroy(dragged.gameObject);
-//     }
-// }
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,8 +9,8 @@ public class DropSlot : MonoBehaviour, IDropHandler
     private Image iconImage;
     public Button removeButton;
     private GameObject assignedPrefab;
-
     private SelectionScreenManager manager;
+    public Image AreanaSlotImage;
 
     private void Start()
     {
@@ -79,7 +45,11 @@ public class DropSlot : MonoBehaviour, IDropHandler
         {
             iconImage.sprite = unitSprite;
             iconImage.color = Color.white;
+            AreanaSlotImage.sprite = unitSprite;
+            AreanaSlotImage.color = Color.white;
         }
+
+
 
         if (removeButton != null)
             removeButton.gameObject.SetActive(true);
@@ -103,7 +73,10 @@ public class DropSlot : MonoBehaviour, IDropHandler
         LoadoutData.selectedUnits[slotIndex] = null;
 
         iconImage.sprite = SourceImage;
+        AreanaSlotImage.sprite = SourceImage;
         iconImage.color = new Color32(0x6D, 0x6D, 0x6D, 0xFF);
+        AreanaSlotImage.color = new Color32(0x6D, 0x6D, 0x6D, 0xFF);
+
 
         manager.ReAddUnitToGrid(assignedPrefab);
 

@@ -251,6 +251,7 @@ MonoBehaviour:
   baseHP: 5
   baseAttack: 2
   baseSpeed: 1
+  UpgradeCost: 100
   baseCritChance: 10
   critMultiplier: 1.5
   baseDodgeChance: 0
@@ -263,6 +264,7 @@ MonoBehaviour:
     DodgeChancePerLevel: 0
   currentLevel: 1
   maxLevel: 20
+  currentHP: 13
 --- !u!1 &3424605970547649332
 GameObject:
   m_ObjectHideFlags: 0

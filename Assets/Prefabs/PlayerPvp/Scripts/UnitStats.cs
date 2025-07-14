@@ -1,3 +1,5 @@
+using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,9 +19,11 @@ public class UnitStats : MonoBehaviour
     public int baseHP = 10;
     public int baseAttack = 2;
     public int baseSpeed = 1;
+    public int UpgradeCost = 100;
     [Range(0, 100)] public float baseCritChance = 10f;
     [Range(0, 10f)] public float critMultiplier = 1.5f;
     [Range(0, 100)] public float baseDodgeChance = 0f;
+    public int price = 200;
 
     [Header("Growth Per Level")]
     public StatGrowth growth;
@@ -27,6 +31,20 @@ public class UnitStats : MonoBehaviour
     [Header("Level")]
     public int currentLevel = 1;
     public int maxLevel = 20;
+
+    public int currentHP; // Tracks actual HP during battle
+
+    public int MaxHP => baseHP + growth.HPPerLevel * (currentLevel - 1);
+
+    private void Awake()
+    {
+        ResetHP();
+    }
+
+    public void ResetHP()
+    {
+        currentHP = MaxHP;
+    }
 
     public UnitStatsData GetStats()
     {
@@ -44,18 +62,27 @@ public class UnitStats : MonoBehaviour
     [ContextMenu("Level Up")]
     public void LevelUp()
     {
+
         if (currentLevel < maxLevel)
         {
-            currentLevel++;
-            Debug.Log($"{name} leveled up to {currentLevel}");
+            if (PlayerStatsManager.Instance.SpendCoins(UpgradeCost))
+            {
+                currentLevel++;
+                Debug.Log($"{name} leveled up to {currentLevel}");
+                ResetHP(); // Optionally restore HP on level up
 
-            // Optionally, notify CombatHandler to update UI
-            // UnitCombatHandler combatHandler = GetComponent<UnitCombatHandler>();
-            // if (combatHandler != null)
-            // {
-            //     combatHandler.UpdateHealthText();
-            //     combatHandler.UpdateSpeedText();
-            // }
+                // Optionally, notify CombatHandler to update UI
+                // UnitCombatHandler combatHandler = GetComponent<UnitCombatHandler>();
+                // if (combatHandler != null)
+                // {
+                //     combatHandler.UpdateHealthText();
+                //     combatHandler.UpdateSpeedText();
+                // }
+            }
+            else
+            {
+                Debug.Log($"Not enough coins to level up {name}!");
+            }
         }
         else
         {

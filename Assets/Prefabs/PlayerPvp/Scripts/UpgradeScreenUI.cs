@@ -19,6 +19,10 @@ public class UpgradeScreenUI : MonoBehaviour
 
     private UnitStats currentUnit;
 
+    public bool isBuyScreen = false;
+
+
+
     public void Open(UnitStats unitStats, Sprite unitSprite)
     {
         Debug.Log($"Opening Upgrade Screen for {unitStats.name}");
@@ -45,7 +49,7 @@ public class UpgradeScreenUI : MonoBehaviour
             CritMultiplier = currentUnit.critMultiplier + growth.CritDamagePerLevel * levelOffset,
             DodgeChance = currentUnit.baseDodgeChance + growth.DodgeChancePerLevel * levelOffset
         };
-        
+
         nameText.text = currentUnit.name;
         levelText.text = $"Level: {currentUnit.currentLevel}/{currentUnit.maxLevel}";
 
@@ -60,17 +64,25 @@ public class UpgradeScreenUI : MonoBehaviour
     {
         row.GetChild(0).GetComponent<TMP_Text>().text = label;
         row.GetChild(1).GetComponent<TMP_Text>().text = isMultiplier ? $"{current:F2}x" : isPercent ? $"{current:F1}%" : Mathf.RoundToInt(current).ToString();
-        row.GetChild(2).GetComponent<TMP_Text>().text = increase != 0
+        if (row.childCount > 2)
+        {
+            row.GetChild(2).GetComponent<TMP_Text>().text = increase != 0
             ? isMultiplier ? $"+{increase:F2}x"
             : isPercent ? $"+{increase:F1}%"
             : $"+{Mathf.RoundToInt(increase)}"
             : "";
+        }
     }
 
     public void OnLevelUp()
     {
         currentUnit.LevelUp();
         RefreshUI();
+    }
+
+    public void OnBuyUnit()
+    {
+        SelectionScreenManager.Instance.BuyUnit(currentUnit.name);
     }
 
     public void Close()
@@ -80,7 +92,14 @@ public class UpgradeScreenUI : MonoBehaviour
 
     private void Start()
     {
-        levelUpButton.onClick.AddListener(OnLevelUp);
+        if (isBuyScreen)
+        {
+            levelUpButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            levelUpButton.onClick.AddListener(OnLevelUp);
+        }
         closeButton.onClick.AddListener(Close);
     }
 }

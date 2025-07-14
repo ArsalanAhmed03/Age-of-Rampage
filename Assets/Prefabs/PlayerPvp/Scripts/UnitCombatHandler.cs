@@ -6,6 +6,7 @@ public class UnitCombatHandler : MonoBehaviour
 {
     public bool IsFrontline = true;
     public Animator animator;
+    public SpriteRenderer spriteRenderer;
 
     [Header("UI")]
     public TMP_Text healthText;
@@ -26,6 +27,7 @@ public class UnitCombatHandler : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         battleSystem = BattleSystem.Instance;
         unitStats = GetComponent<UnitStats>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (unitStats == null)
             Debug.LogError($"UnitStats missing on {name}");
@@ -34,13 +36,13 @@ public class UnitCombatHandler : MonoBehaviour
             Debug.LogError("BattleSystem instance not found!");
 
         // Flip sprite based on position
-        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null)
         {
             bool isTowardsRight = transform.position.x > 0;
             spriteRenderer.flipX = isLookingTowardsRight == isTowardsRight;
         }
 
+        unitStats.ResetHP(); // Ensure currentHP is set at spawn
         UpdateHealthText();
         UpdateSpeedText();
     }
@@ -56,9 +58,13 @@ public class UnitCombatHandler : MonoBehaviour
         StartAttack();
     }
 
+    int originalOrder = 0;
     public void StartAttack()
     {
-        Debug.Log($"{gameObject.name} is starting an attack!");
+
+        // Debug.Log($"{gameObject.name} is starting an attack!");
+        originalOrder = spriteRenderer.sortingOrder;
+        spriteRenderer.sortingOrder = 10;
 
         currentTarget = battleSystem.PickTarget(this);
         if (currentTarget == null)
@@ -83,7 +89,7 @@ public class UnitCombatHandler : MonoBehaviour
             ? Mathf.RoundToInt(stats.Attack * stats.CritMultiplier)
             : stats.Attack;
 
-        Debug.Log($"Attack Damage: {stats.Attack}, Critical Hit: {isCrit}, Damage: {damage}");
+        // Debug.Log($"Attack Damage: {stats.Attack}, Critical Hit: {isCrit}, Damage: {damage}");
 
         if (isCrit)
             Debug.Log($"{gameObject.name} landed a CRITICAL HIT! Damage: {damage}");
@@ -102,14 +108,15 @@ public class UnitCombatHandler : MonoBehaviour
             return;
         }
 
-        unitStats.baseHP -= incomingDamage;
-        if (unitStats.baseHP < 0) unitStats.baseHP = 0;
+        unitStats.currentHP -= incomingDamage;
+        if (unitStats.currentHP < 0) unitStats.currentHP = 0;
+        battleSystem.UpdateHealthBars(incomingDamage);
 
         UpdateHealthText();
 
-        Debug.Log($"{gameObject.name} took {incomingDamage} damage from {attacker.gameObject.name}. Remaining HP: {unitStats.baseHP}");
+        // Debug.Log($"{gameObject.name} took {incomingDamage} damage from {attacker.gameObject.name}. Remaining HP: {unitStats.currentHP}");
 
-        if (unitStats.baseHP <= 0)
+        if (unitStats.currentHP <= 0)
             Die();
     }
 
@@ -126,16 +133,10 @@ public class UnitCombatHandler : MonoBehaviour
         StartCoroutine(ReturnToStart());
     }
 
-    IEnumerator PauseBeforeNextTurn()
-    {
-        yield return new WaitForSeconds(0.5f);
-        battleSystem.NextTurn();
-    }
-
     public void UpdateHealthText()
     {
         if (healthText != null)
-            healthText.text = $"HP: {unitStats.GetStats().HP}";
+            healthText.text = $"HP: {unitStats.currentHP}/{unitStats.MaxHP}";
     }
 
     public void UpdateSpeedText()
@@ -172,7 +173,11 @@ public class UnitCombatHandler : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, originalPosition, Time.deltaTime * 10f);
             yield return null;
         }
-
-        battleSystem.NextTurn();
+        spriteRenderer.sortingOrder = originalOrder;
+        // battleSystem.NextTurn();
+        if (!battleSystem.fightEnded)
+        {
+            battleSystem.NextTurn();
+        }
     }
 }
