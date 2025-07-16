@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Zoom: 0.5
   m_ScrollPosition: {x: 0, y: 0}
   m_SelectedObject: {fileID: 0}
-  m_SelectedSpriteRectGUID: 66bd42f8af0a5bc10800000000000000
+  m_SelectedSpriteRectGUID: 00000000000000000000000000000000
   m_LastUsedModuleTypeName: UnityEditor.U2D.Sprites.SpriteFrameModule
 --- !u!114 &12
 MonoBehaviour:
@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 394.6667
+    y: 340
     width: 1280
     height: 239.33331
   m_SerializedDataModeController:
@@ -394,7 +394,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 79}
     m_SelectedIDs: 00190100
     m_LastClickedID: 71936
-    m_ExpandedIDs: 0000000072f40000001901000419010006190100081901000a1901000c1901000e19010010190100121901001419010016190100181901001a1901001c1901001e1901002019010022190100061a0100121a0100241a0100261b01002e1b01003e1b010096ac010098ac01009aac0100282302002a23020000ca9a3b
+    m_ExpandedIDs: 0000000056f40000681501006a1501006c1501006e15010070150100721501007415010076150100781501007a1501007c1501007e15010080150100821501008415010086150100881501008a1501008c1501008e15010090150100921501009415010096150100981501009a150100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -423,7 +423,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000072f4000000190100021901000419010006190100081901000a1901000c1901000e19010010190100121901001419010016190100181901001a1901001c1901001e1901002019010022190100
+    m_ExpandedIDs: 0000000056f40000681501006a1501006c1501006e15010070150100721501007415010076150100781501007a1501007c1501007e15010080150100821501008415010086150100881501008a1501008c1501008e15010090150100921501009415010096150100981501009a150100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 78.66667
+    y: 24
     width: 325
     height: 290
   m_SerializedDataModeController:
@@ -520,7 +520,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 0a1a0100
+      m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 7623fdff8239fdff681efeff08d4feffc4eefeffdcfafeff7afbfeffca83fffff4fafffff6faffffdcf9000034fa0000900c0200
       m_RenameOverlay:
@@ -1797,8 +1797,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 970
-    y: 78.66667
+    x: 971
+    y: 24
     width: 309
     height: 290
   m_SerializedDataModeController:
@@ -1921,8 +1921,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Simulator\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 326
-    y: 78.66667
+    x: 327
+    y: 24
     width: 642
     height: 290
   m_SerializedDataModeController:
@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_UseMipMap: 0
   m_SimulatorState:
     controlPanelVisible: 0
-    controlPanelWidth: 0
+    controlPanelWidth: NaN
     controlPanelFoldoutKeys:
     - UnityEditor.AdaptivePerformance.Editor.AdaptivePerformanceUIExtension
     - UnityEditor.DeviceSimulation.ApplicationSettingsPlugin

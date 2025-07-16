@@ -12,6 +12,9 @@ public class UnitCombatHandler : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text speedText;
 
+    [Header("Body Rotation")]
+    public GameObject bodyRotate;
+
     private BattleSystem battleSystem;
     private UnitCombatHandler currentTarget;
     public UnitStats unitStats;
@@ -40,6 +43,16 @@ public class UnitCombatHandler : MonoBehaviour
         {
             bool isTowardsRight = transform.position.x > 0;
             spriteRenderer.flipX = isLookingTowardsRight == isTowardsRight;
+        }
+
+        if (bodyRotate != null)
+        {
+            Debug.Log($"Setting body rotation for {name}");
+            bodyRotate.transform.localRotation = Quaternion.Euler(
+                bodyRotate.transform.localRotation.eulerAngles.x,
+                180f,
+                bodyRotate.transform.localRotation.eulerAngles.z
+            );
         }
 
         unitStats.ResetHP(); // Ensure currentHP is set at spawn

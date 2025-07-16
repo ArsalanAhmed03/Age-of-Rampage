@@ -133,8 +133,26 @@ public class BattleSystem : MonoBehaviour
         turnQueue.AddRange(enemyFrontline);
         turnQueue.AddRange(enemyBackline);
 
-        // Sort based on speed (from UnitStats)
-        // Shuffle the turnQueue first for randomness among same speed units
+        // Assign bonus speed based on placement
+        Dictionary<UnitCombatHandler, int> bonusSpeed = new Dictionary<UnitCombatHandler, int>();
+
+        // Player Front: +6, +5, +4
+        for (int i = 0; i < playerFrontline.Count; i++)
+            bonusSpeed[playerFrontline[i]] = 6 - i;
+
+        // Player Back: +3, +2, +1
+        for (int i = 0; i < playerBackline.Count; i++)
+            bonusSpeed[playerBackline[i]] = 3 - i;
+
+        // Enemy Front: +6, +5, +4
+        for (int i = 0; i < enemyFrontline.Count; i++)
+            bonusSpeed[enemyFrontline[i]] = 6 - i;
+
+        // Enemy Back: +3, +2, +1
+        for (int i = 0; i < enemyBackline.Count; i++)
+            bonusSpeed[enemyBackline[i]] = 3 - i;
+
+        // Shuffle for randomness among same speed+bonus
         for (int i = turnQueue.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
@@ -142,8 +160,14 @@ public class BattleSystem : MonoBehaviour
             turnQueue[i] = turnQueue[j];
             turnQueue[j] = temp;
         }
-        // Then sort by speed (stable sort so shuffled order is preserved for equal speeds)
-        turnQueue.Sort((a, b) => b.unitStats.GetStats().Speed.CompareTo(a.unitStats.GetStats().Speed));
+
+        // Sort by (base speed + bonus), descending
+        turnQueue.Sort((a, b) =>
+        {
+            int aSpeed = a.unitStats.GetStats().Speed + (bonusSpeed.ContainsKey(a) ? bonusSpeed[a] : 0);
+            int bSpeed = b.unitStats.GetStats().Speed + (bonusSpeed.ContainsKey(b) ? bonusSpeed[b] : 0);
+            return bSpeed.CompareTo(aSpeed);
+        });
 
         currentTurnIndex = 0;
         NextTurn();

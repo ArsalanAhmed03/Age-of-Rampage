@@ -9,6 +9,7 @@ TagManager:
   - BuyButton
   - WonText
   - LostText
+  - BodyRotate
   layers:
   - Default
   - TransparentFX
